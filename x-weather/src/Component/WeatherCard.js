@@ -1,4 +1,3 @@
-// WeatherCard.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -18,19 +17,15 @@ const WeatherCard = () => {
       setError(''); // Clear error message on success
     } catch (error) {
       setError('Failed to fetch weather data');
+      setWeatherData({}); // Clear weather data on error
+      alert('Failed to fetch weather data'); // Show alert on error
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (city) {
-      fetchWeatherData();
-    }
-  }, [city]);
-
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Added to prevent default form submission behavior
     setIsSubmit(true);
     fetchWeatherData();
   };
@@ -44,7 +39,7 @@ const WeatherCard = () => {
   return (
     <div className="h-screen w-screen bg-sky-100 flex justify-center items-center flex-col gap-5">
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}> {/* Added form element and onSubmit handler */}
           <div className="flex justify-center items-center gap-4">
             <div>
               <input
@@ -62,7 +57,7 @@ const WeatherCard = () => {
               </button>
             </div>
           </div>
-        </form>
+        </form> {/* Closed form element */}
       </div>
 
       {isLoading && (
@@ -71,7 +66,7 @@ const WeatherCard = () => {
         </div>
       )}
 
-      {isSubmit && !error && weatherData && (
+      {isSubmit && !error && weatherData && weatherData.condition && ( /* Added check for weatherData and weatherData.condition */
         <div className="weather-cards flex gap-4">
           <div className="weather-card flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
             <p>Temperature</p>
@@ -89,6 +84,12 @@ const WeatherCard = () => {
             <p>Wind Speed</p>
             <p>{weatherData.wind_kph}kph</p>
           </div>
+        </div>
+      )}
+
+      {isSubmit && error && (
+        <div className="flex justify-center items-center">
+          <p className="text-red-500">{error}</p>
         </div>
       )}
     </div>
