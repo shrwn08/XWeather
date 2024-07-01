@@ -9,6 +9,7 @@ const WeatherCard = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchWeatherData = async () => {
+    setIsLoading(true);
     const key_id = "e049bd75748e4fefb09172650242803";
     try {
       const response = await axios.get(
@@ -17,23 +18,22 @@ const WeatherCard = () => {
       setWeatherData(response.data.current);
       setError(""); // Clear error message on success
     } catch (error) {
-      setError("Unable to fetch weather data");
+      setError("Failed to fetch weather data");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    setIsLoading(true)
-    fetchWeatherData();
-    setIsSubmit(false);
+    if (city) {
+      fetchWeatherData();
+    }
   }, [city]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetchWeatherData();
     setIsSubmit(true);
-    if (error) {
-      alert(error);
-    }
+    fetchWeatherData();
   };
 
   const handleChange = (e) => {
@@ -69,29 +69,30 @@ const WeatherCard = () => {
         </form>
       </div>
 
+      {isLoading && (
+        <div className="flex justify-center items-center">
+          <p>Loading data...</p>
+        </div>
+      )}
+
       {isSubmit && !error && weatherData && (
-        <div className=" flex gap-4">
-          <div className="flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
+        <div className="weather-cards flex gap-4">
+          <div className="weather-card flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
             <p>Temperature</p>
             <p>{weatherData.temp_c}°C</p>
           </div>
-          <div className="flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
+          <div className="weather-card flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
             <p>Humidity</p>
             <p>{weatherData.humidity}%</p>
           </div>
-          <div className="flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
+          <div className="weather-card flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
             <p>Condition</p>
             <p>{weatherData.condition.text}</p>
           </div>
-          <div className="flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
+          <div className="weather-card flex justify-center items-center flex-col text-black font-bold h-24 w-48 bg-white rounded-lg">
             <p>Wind Speed</p>
             <p>{weatherData.wind_kph}kph</p>
           </div>
-        </div>
-      )}
-      {isLoading && (
-        <div className="flex justify-center items-center">
-          <p>Loading...</p>
         </div>
       )}
     </div>
