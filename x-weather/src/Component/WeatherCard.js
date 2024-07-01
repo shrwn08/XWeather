@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+// WeatherCard.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const WeatherCard = () => {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState({});
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchWeatherData = async () => {
     setIsLoading(true);
-    const key_id = "e049bd75748e4fefb09172650242803";
+    const key_id = 'e049bd75748e4fefb09172650242803';
     try {
-      const response = await axios.get(
-        `https://api.weatherapi.com/v1/current.json?key=${key_id}&q=${city}`
-      );
+      const response = await axios.get(`https://api.weatherapi.com/v1/current.json?key=${key_id}&q=${city}`);
       setWeatherData(response.data.current);
-      setError(""); // Clear error message on success
+      setError(''); // Clear error message on success
     } catch (error) {
-      setError("Failed to fetch weather data");
+      setError('Failed to fetch weather data');
     } finally {
       setIsLoading(false);
     }
@@ -44,24 +43,21 @@ const WeatherCard = () => {
 
   return (
     <div className="h-screen w-screen bg-sky-100 flex justify-center items-center flex-col gap-5">
-      <div className="">
+      <div>
         <form onSubmit={handleSubmit}>
           <div className="flex justify-center items-center gap-4">
-            <div className="">
+            <div>
               <input
                 type="text"
                 placeholder="Enter your city"
-                className="h-8 w-48 border-2 p-2 "
+                className="h-8 w-48 border-2 p-2"
                 onChange={handleChange}
                 value={city}
                 required
               />
             </div>
-            <div className="">
-              <button
-                type="submit"
-                className="bg-green-400 p-1 px-2 text-white"
-              >
+            <div>
+              <button type="submit" className="bg-green-400 p-1 px-2 text-white">
                 Submit
               </button>
             </div>
